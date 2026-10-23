@@ -51,7 +51,7 @@ Airflow DAG taxilake_monthly:  bronze ▶ silver ▶ quality_gate (fail if >5% r
 | `NEGATIVE_AMOUNT` | 143,900 | Refund and void rows; mixing them into revenue double-counts corrections |
 | `NON_POSITIVE_DURATION` | 76,633 | Drop-off before or at pickup: clock errors |
 | `EXCESSIVE_DURATION` (>12 h) | 72,200 | Meter left running |
-| `DUPLICATE` | 12,054 | Same vendor, timestamps, zones, fare and total: the file contains the trip twice |
+| `DUPLICATE` | 12,054 | Same vendor, timestamps, zones, fare and total. All 12,054 are in the Jan-2020 file, which points to a one-off export problem upstream, not a pattern |
 | `OUT_OF_PERIOD` | 1,921 | Trip date outside the file's month; would land in the wrong partition |
 | `EXCESSIVE_DISTANCE` (>200 mi) | 1,109 | Odometer glitches |
 | `MISSING_TIMESTAMP`, `UNKNOWN_ZONE` | 0 | Guard rails: present in tests, no hits in this data |
