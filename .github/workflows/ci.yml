@@ -13,7 +13,7 @@ jobs:
         with: { python-version: "3.12", cache: pip }
       - run: pip install -r requirements.txt
       - run: pip install "apache-airflow==2.10.5" -c https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.12.txt
-      - run: pip install "typing-extensions>=4.12.0"
+      - run: pip install "typing-extensions>=4.13.0"
 
       - name: Unit tests (rules, idempotency, atomic writes) + DAG integrity
         run: pytest -q
