@@ -6,3 +6,6 @@ logs/
 __pycache__/
 .pytest_cache/
 .venv/
+CV/
+*.pdf
+*.tex
