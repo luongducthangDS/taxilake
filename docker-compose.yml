@@ -1,0 +1,23 @@
+# Run Airflow and the TaxiLake pipeline in a container:
+#   docker compose up
+# Open http://localhost:8080 (credentials printed in the log)
+services:
+  airflow:
+    image: apache/airflow:2.10.5-python3.12
+    container_name: taxilake-airflow
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - TAXILAKE_HOME=/opt/taxilake
+      - TAXILAKE_DATA_DIR=/opt/taxilake/data
+      - DBT_PROFILES_DIR=/opt/taxilake/dbt
+    volumes:
+      - ./dags:/opt/airflow/dags:ro
+      - .:/opt/taxilake
+    command: >
+      bash -c "pip install --no-cache-dir -r /opt/taxilake/requirements.txt &&
+               airflow db migrate &&
+               airflow standalone"
