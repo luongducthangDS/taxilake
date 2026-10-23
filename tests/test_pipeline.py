@@ -64,7 +64,7 @@ def run_month(lake, month="2021-07"):
 
 def test_each_rule_catches_its_row_and_clean_row_passes(lake):
     write_landing(lake, "2021-07", list(CASES.values()))
-    _, s = run_month(lake)
+    _, _s = run_month(lake)
     from taxilake.config import QUARANTINE, SILVER, partition
     reasons = sorted(r["reject_reason"] for r in read(partition(QUARANTINE, "2021-07")))
     assert reasons == sorted(k for k in CASES if k)

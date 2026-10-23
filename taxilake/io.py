@@ -1,7 +1,7 @@
 """Small I/O helpers: atomic partition writes and the run log."""
 import shutil
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import duckdb
@@ -41,6 +41,6 @@ def log_run(step: str, month: str, metrics: dict) -> None:
                 seconds DOUBLE, details JSON)""")
         con.execute(
             "INSERT INTO meta.load_log VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [datetime.now(timezone.utc), step, month, metrics.get("rows_in"), metrics.get("rows_out"),
+            [datetime.now(UTC), step, month, metrics.get("rows_in"), metrics.get("rows_out"),
              metrics.get("rows_quarantined"), metrics.get("seconds"), metrics.get("details", "{}")],
         )

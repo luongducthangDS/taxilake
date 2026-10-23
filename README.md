@@ -113,3 +113,7 @@ airflow db migrate && airflow dags test taxilake_monthly 2021-07-01
 4. Why does partition pruning matter less here than you might expect? (Hint: most of the reload time is the delete.)
 5. When would you move from DuckDB to Spark, and what would change?
 6. A month suddenly has 9 % quarantined rows. Walk through what happens and what you do next.
+
+## Data and license
+
+Code: MIT ([LICENSE](LICENSE)). Data: [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page), downloaded at run time under the City's terms of use.
