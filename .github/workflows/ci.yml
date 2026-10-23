@@ -29,6 +29,9 @@ jobs:
       - name: End-to-end on a small real month (2020-04, ~238k rows)
         run: python -m taxilake.cli run --months 2020-04
 
+      - name: Restore dbt protobuf compatibility
+        run: pip install "protobuf>=6.0"
+
       - name: dbt build (models + 35 data tests) on that month
         working-directory: dbt
         run: dbt build --full-refresh

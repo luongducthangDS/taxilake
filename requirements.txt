@@ -1,9 +1,7 @@
 duckdb>=1.1
-dbt-duckdb>=1.9.0,<1.10.0
-dbt-core>=1.9.0,<1.10.0
+dbt-duckdb>=1.9
 pyarrow>=15
 pytest>=8
 matplotlib>=3.8
-protobuf<5
 # Airflow is installed separately with its constraints file (see README):
 # pip install "apache-airflow==2.10.5" -c https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.12.txt
