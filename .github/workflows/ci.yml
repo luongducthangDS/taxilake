@@ -15,10 +15,16 @@ jobs:
       - run: pip install "apache-airflow==2.10.5" -c https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.12.txt
       - run: pip install "typing-extensions>=4.13.0"
 
+      - name: Initialize Airflow DB
+        run: airflow db migrate
+        env:
+          AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
       - name: Unit tests (rules, idempotency, atomic writes) + DAG integrity
         run: pytest -q
         env:
           PYTHONPATH: ${{ github.workspace }}
+          AIRFLOW__CORE__LOAD_EXAMPLES: "False"
 
       - name: End-to-end on a small real month (2020-04, ~238k rows)
         run: python -m taxilake.cli run --months 2020-04
