@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 airflow = pytest.importorskip("airflow")
-from airflow.models import DagBag  # noqa: E402
+from airflow.models import DagBag
 
 DAGS = Path(__file__).resolve().parents[1] / "dags"
 
@@ -31,8 +31,9 @@ def test_quality_gate_does_not_retry(dag):
 
 
 def test_quality_gate_blocks_bad_month():
-    from airflow.exceptions import AirflowFailException
     import importlib.util
+
+    from airflow.exceptions import AirflowFailException
     spec = importlib.util.spec_from_file_location("dagmod", DAGS / "taxilake_monthly.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
