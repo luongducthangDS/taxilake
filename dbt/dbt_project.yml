@@ -1,0 +1,28 @@
+name: taxilake
+version: "1.0.0"
+config-version: 2
+profile: taxilake
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+vars:
+  lake_path: "{{ env_var('TAXILAKE_DATA_DIR', '../data') }}/lake"
+  months: []          # e.g. ["2021-07-01"]; empty = load every month newer than what the table already has
+
+models:
+  taxilake:
+    staging:
+      +materialized: view
+      +schema: staging
+    marts:
+      +materialized: table
+      +schema: gold
+
+seeds:
+  taxilake:
+    +schema: reference
+    taxi_zone_lookup:
+      +column_types: {LocationID: integer, Borough: varchar, Zone: varchar, service_zone: varchar}

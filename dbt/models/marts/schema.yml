@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: fct_trips
+    description: One row per valid NYC yellow-taxi trip (cleaned in silver). Incremental by pickup_month.
+    columns:
+      - name: trip_key
+        description: md5(source file + source row) - stable lineage back to the raw CSV line.
+        data_tests: [unique, not_null]
+      - name: pickup_month
+        data_tests: [not_null]
+      - name: pickup_date
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_date'), field: date_day}}
+      - name: pickup_zone_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_zone'), field: zone_id}}
+      - name: dropoff_zone_id
+        data_tests:
+          - not_null
+          - relationships: {arguments: {to: ref('dim_zone'), field: zone_id}}
+      - name: vendor_id
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_vendor'), field: vendor_id}}
+      - name: payment_type_id
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_payment_type'), field: payment_type_id}}
+      - name: rate_code_id
+        data_tests:
+          - relationships: {arguments: {to: ref('dim_rate_code'), field: rate_code_id}}
+      - name: trip_minutes
+        data_tests:
+          - not_null
+          - accepted_range: {arguments: {min_value: 0.01, max_value: 720}}
+      - name: trip_miles
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0.01, max_value: 200}}
+      - name: fare_amount
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0}}
+      - name: total_amount
+        data_tests:
+          - not_null
+          - accepted_range: {arguments: {min_value: 0}}
+      - name: passenger_count
+        data_tests:
+          - accepted_range: {arguments: {min_value: 0, max_value: 9}, config: {severity: warn}}
+
+  - name: dim_zone
+    columns:
+      - name: zone_id
+        data_tests: [unique, not_null]
+      - name: borough
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Bronx", "Brooklyn", "EWR", "Manhattan", "Queens", "Staten Island", "Unknown", "N/A"]
+  - name: dim_date
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+  - name: dim_payment_type
+    columns:
+      - name: payment_type_id
+        data_tests: [unique, not_null]
+  - name: dim_rate_code
+    columns:
+      - name: rate_code_id
+        data_tests: [unique, not_null]
+  - name: dim_vendor
+    columns:
+      - name: vendor_id
+        data_tests: [unique, not_null]
+  - name: agg_daily_zone
+    columns:
+      - name: trips
+        data_tests: [not_null, {accepted_range: {arguments: {min_value: 1}}}]

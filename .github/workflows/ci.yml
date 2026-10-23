@@ -1,0 +1,25 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    env:
+      TAXILAKE_DATA_DIR: ${{ github.workspace }}/data
+      DBT_PROFILES_DIR: ${{ github.workspace }}/dbt
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r requirements.txt
+      - run: pip install "apache-airflow==2.10.5" -c https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.12.txt
+
+      - name: Unit tests (rules, idempotency, atomic writes) + DAG integrity
+        run: pytest -q
+
+      - name: End-to-end on a small real month (2020-04, ~238k rows)
+        run: python -m taxilake.cli run --months 2020-04
+
+      - name: dbt build (models + 35 data tests) on that month
+        working-directory: dbt
+        run: dbt build --full-refresh
